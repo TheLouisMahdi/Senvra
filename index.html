@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f4f0df" id="themeColor">
+  <meta name="referrer" content="no-referrer">
+  <meta name="application-name" content="Senvra">
+  <meta name="description" content="Senvra is a simple local browser tool to convert, protect and restore files without uploading them.">
+  <meta name="author" content="TheLouisMahdi">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-SdosrnQAAIytaY0TlHI+DpHdy/DSYRQq0QHP1K8UnMg='; script-src 'sha256-lTLxac1fx3A4hpu2nyMVFKw4duPMYgWmY7lEtnam65w='; connect-src 'none'; img-src 'none'; media-src 'none'; font-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; child-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'; require-trusted-types-for 'script'; trusted-types 'none'">
+  <title>Senvra · Local File Tool</title>
+  <style>/* ================================================================
+   SENVRA — LOCAL FILE TOOL
+   ================================================================ */
+:root{--bad:#d94f66;--good:#178c58;--warn:#ae7218;--ink:#153126;--cream:#f2eedb;--paper:#fffdf6;--green:#2d8c61;--mint:#78d3a7;--violet:#9b5cf6;--pink:#f35ca7;--rail:#cbd7cd;--shadow:0 18px 55px rgba(25,49,38,.11)}
+*{box-sizing:border-box}html{min-height:100%;background:#f2eedb}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif;background:var(--bg);padding:18px 14px 28px;transition:background .28s ease,color .2s ease;--bg:#f3efdd;--panel:#fffdf6;--panel2:#f8f5e9;--line:#cad5cb;--text:#163629;--muted:#6d7f74;--accent:#2d8c61;--accent2:#78d3a7;--soft:#e3f3e9;--glow:rgba(45,140,97,.22)}
+body[data-mode="decode"]{--bg:#0b0714;--panel:#150e23;--panel2:#100a1b;--line:#4a315f;--text:#fff7ff;--muted:#c2a9ce;--accent:#a855f7;--accent2:#f05aa6;--soft:#2b1637;--glow:rgba(168,85,247,.28);--good:#77e3aa;background:radial-gradient(circle at 74% 10%,rgba(240,90,166,.13),transparent 26%),radial-gradient(circle at 12% 80%,rgba(168,85,247,.17),transparent 30%),#0b0714}
+button,input,textarea{font:inherit}.shell{width:min(1020px,100%);margin:auto}.topline{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:4px 2px 14px}.brand{display:flex;align-items:center;gap:9px;min-width:0}.brand a{color:inherit;text-decoration:none}.logo{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--text);color:var(--bg);overflow:hidden;flex:0 0 38px}.logo svg{width:24px;height:24px;display:block;fill:currentColor}.brand-copy{min-width:0}.brand-copy b{display:block;font-size:13px;letter-spacing:.2px}.brand-copy span{display:block;font-size:10px;color:var(--muted);margin-top:2px;direction:ltr;text-align:left}.brand-copy a:hover span{text-decoration:underline}.language-switch{display:inline-grid;grid-template-columns:1fr 1fr;padding:3px;border:1px solid var(--line);border-radius:11px;background:var(--panel2);direction:ltr}.lang-btn{border:0;background:transparent;color:var(--muted);border-radius:8px;padding:6px 9px;font-size:10px;font-weight:900;cursor:pointer}.lang-btn.active{background:var(--text);color:var(--bg)}
+.hero{padding:20px 0 14px;text-align:center}.hero h1{margin:0;font-size:clamp(27px,5vw,43px);letter-spacing:-1.8px}.subtitle{max-width:690px;margin:8px auto 0;color:var(--muted);font-size:12px;line-height:1.9}.philosophy{margin:15px auto 0;max-width:760px;font-weight:750;font-size:13px;line-height:1.9}.philosophy:before,.philosophy:after{content:"";display:inline-block;width:28px;height:1px;background:var(--accent);opacity:.45;vertical-align:middle;margin:0 10px}.local-pill{margin-top:10px;display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);font-size:9px;font-weight:900;color:var(--muted);background:var(--panel2);direction:ltr}.local-dot{width:6px;height:6px;border-radius:50%;background:var(--good);box-shadow:0 0 0 4px color-mix(in srgb,var(--good) 12%,transparent)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin:6px auto 12px;padding:3px;border:1px solid var(--line);background:var(--panel2);border-radius:14px;max-width:620px}.tab{border:0;border-radius:10px;padding:10px 12px;cursor:pointer;background:transparent;color:var(--muted);font-size:11px;font-weight:900}.tab.active{background:var(--text);color:var(--bg)}
+.panel{display:none;border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:18px;box-shadow:var(--shadow)}.panel.active{display:block}.title-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.title{margin:0;font-size:14px;font-weight:950}.mode-chip{font-size:9px;font-weight:900;letter-spacing:.6px;padding:5px 8px;border-radius:999px;background:var(--soft);color:var(--accent);direction:ltr}
+.intake-grid{display:grid;grid-template-columns:minmax(190px,250px);gap:14px;align-items:stretch;justify-content:center}.intake-grid:has(.file-card.show){grid-template-columns:minmax(190px,250px) minmax(0,1fr);justify-content:stretch}.drop{min-height:126px;border:1px dashed color-mix(in srgb,var(--accent) 65%,var(--line));border-radius:16px;display:grid;place-items:center;text-align:center;padding:16px;cursor:pointer;background:var(--panel2);transition:.18s ease;position:relative;overflow:hidden}.drop:after{content:"";position:absolute;inset:auto -30% -75% -30%;height:95%;background:radial-gradient(ellipse at center,var(--glow),transparent 67%);pointer-events:none}.drop:hover,.drop.drag{transform:translateY(-1px);border-color:var(--accent)}.drop-icon{font-size:19px;color:var(--accent);margin-bottom:5px}.drop strong{display:block;font-size:11px}.drop span{display:block;margin-top:5px;color:var(--muted);font-size:9px;line-height:1.55}input[type=file]{display:none}.file-card{display:none;border:1px solid var(--line);border-radius:16px;background:var(--panel2);padding:13px;align-items:center;gap:10px}.file-card.show{display:flex}.file-badge{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:var(--soft);color:var(--accent);font-size:11px;font-weight:950}.file-info{min-width:0}.file-name{font-size:11px;font-weight:900;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.45}.file-meta{color:var(--muted);font-size:9px;margin-top:3px;overflow-wrap:anywhere;word-break:break-word;line-height:1.5}
+.security-strip{margin-top:12px;border-top:1px solid var(--line);padding-top:12px}.password-toggle-row{display:flex;align-items:center;justify-content:space-between;gap:14px}.password-toggle-copy b{display:block;font-size:11px}.password-toggle-copy span{display:block;color:var(--muted);font-size:9px;margin-top:2px}.switch{position:relative;width:46px;height:25px;flex:0 0 46px;cursor:pointer}.switch input{position:absolute;opacity:0}.switch-track{position:absolute;inset:0;border-radius:999px;background:var(--line);transition:.25s}.switch-track:after{content:"";position:absolute;width:17px;height:17px;top:3px;left:4px;border-radius:50%;background:var(--panel);box-shadow:0 2px 8px rgba(0,0,0,.18);transition:.25s}.switch input:checked+.switch-track{background:linear-gradient(90deg,var(--accent),var(--accent2))}.switch input:checked+.switch-track:after{transform:translateX(20px);background:#fff}.password-drawer{max-height:0;opacity:0;overflow:hidden;transform:translateY(-5px);transition:max-height .4s cubic-bezier(.2,.8,.2,1),opacity .25s,transform .3s,margin-top .35s}.password-drawer.open{max-height:230px;opacity:1;transform:none;margin-top:10px}.password-card{padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--panel2)}.encryption-applied{display:none;align-items:center;gap:6px;width:max-content;padding:4px 8px;border-radius:999px;background:color-mix(in srgb,var(--good) 13%,transparent);color:var(--good);font-size:9px;font-weight:950;margin-bottom:9px}.encryption-applied.show{display:flex}.password-head{display:flex;gap:8px;align-items:center}.password-lock{width:29px;height:29px;border-radius:9px;display:grid;place-items:center;background:var(--soft);color:var(--accent);font-size:10px}.password-head b{display:block;font-size:10px}.password-head span{display:block;color:var(--muted);font-size:8.5px;margin-top:2px}.password-input-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:7px;margin-top:9px}.password-input,.password-mini{height:39px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text)}.password-input{padding:0 10px;outline:0;font:10px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.password-mini{padding:0 10px;font-size:9px;font-weight:900;cursor:pointer}.password-mini.primary{border:0;background:var(--text);color:var(--bg)}.password-note{margin-top:7px;color:var(--muted);font-size:8.5px}
+.flow-board{margin-top:16px;border:1px solid var(--line);border-radius:18px;background:var(--panel2);padding:14px}.flow-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.flow-head b{font-size:10px}.flow-percent{font:900 11px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent)}.flow-line{direction:ltr;display:grid;grid-template-columns:55px 1fr 62px;align-items:center;gap:8px}.flow-end{font:950 9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.9px;transition:opacity .25s,transform .25s}.flow-end.left{text-align:right;color:var(--muted)}.flow-end.right{text-align:left;color:var(--accent);opacity:.18;transform:translateX(-5px)}.flow-line.ready .flow-end.right{opacity:1;transform:none}.liquid-track{height:24px;border:1px solid var(--line);border-radius:999px;background:color-mix(in srgb,var(--panel) 68%,transparent);overflow:hidden;position:relative;box-shadow:inset 0 2px 7px rgba(0,0,0,.05)}.liquid-fill{height:100%;width:0%;position:relative;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .28s cubic-bezier(.2,.75,.2,1);box-shadow:0 0 22px var(--glow)}.liquid-fill:after{content:"";position:absolute;right:-14px;top:-5px;width:29px;height:32px;border-radius:46% 54% 51% 49%;background:var(--accent2);animation:liquidBob 1.8s ease-in-out infinite;filter:blur(.1px)}@keyframes liquidBob{0%,100%{transform:rotate(0) translateY(0)}50%{transform:rotate(12deg) translateY(2px)}}.liquid-sheen{position:absolute;inset:2px 5px auto;height:6px;border-radius:999px;background:rgba(255,255,255,.26);pointer-events:none}.path-readout{margin-top:7px;text-align:center;color:var(--muted);font:800 8px ui-monospace,SFMono-Regular,Menlo,monospace;direction:ltr;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stage-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:9px;direction:ltr}.stage{height:4px;border-radius:999px;background:var(--line);transition:.25s}.stage.on{background:var(--accent)}
+.stats-grid{margin-top:12px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.stat-card{min-width:0;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--panel2);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}.stat-card.highlight{background:linear-gradient(180deg,color-mix(in srgb,var(--soft) 80%,var(--panel2)),var(--panel2))}.stat-card.share{grid-column:1/-1;display:flex;flex-direction:column;justify-content:center}.stat-kicker{display:block;font-size:8.5px;font-weight:900;letter-spacing:.4px;color:var(--muted);text-transform:uppercase}.stat-value{display:block;margin-top:8px;font:900 clamp(15px,2vw,19px) ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-word;overflow-wrap:anywhere}.stat-note{display:block;margin-top:6px;color:var(--muted);font-size:8.5px;line-height:1.6;word-break:break-word;overflow-wrap:anywhere}.stat-card.over .stat-value{color:var(--warn)}.stat-card.good .stat-value{color:var(--good)}.stat-card.crypto .stat-value{color:#c58a21}body[data-mode="decode"] .stat-card.crypto .stat-value{color:#d38bff}
+.output{margin-top:14px}.payload-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:7px}.payload-head .label{font-size:10px;font-weight:900}.payload-head .hint{font-size:8.5px;color:var(--muted);line-height:1.65;max-width:100%;overflow-wrap:anywhere}textarea{width:100%;min-height:120px;max-height:230px;resize:vertical;border:1px solid var(--line);border-radius:13px;background:#0f1713;color:#dff6e8;padding:11px;font:9.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;direction:ltr;text-align:left;outline:0}body[data-mode="decode"] textarea{background:#09060f;color:#f3e8ff}.large-placeholder{display:none;min-height:120px;border:1px dashed var(--line);border-radius:13px;place-items:center;text-align:center;padding:18px;color:var(--muted);font-size:10px;background:var(--panel2)}.large-placeholder.show{display:grid}.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:8px}.actions.three{grid-template-columns:repeat(3,minmax(0,1fr))}.action{min-height:38px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);font-size:9px;font-weight:900;cursor:pointer}.action.primary{border:0;background:var(--text);color:var(--bg)}.action:disabled{opacity:.35;cursor:not-allowed}.status-rail{margin-top:9px;min-height:28px;border-radius:10px;background:var(--soft);padding:7px 9px;display:flex;align-items:center;gap:8px}.status-led{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:0 0 7px}.status{font-size:9px;line-height:1.5;color:var(--muted);overflow-wrap:anywhere;word-break:break-word}#encodeStatus{unicode-bidi:plaintext}.status.good{color:var(--good)}.status.bad{color:var(--bad)}.status.warn{color:var(--warn)}.status-rail:has(.status.good) .status-led{background:var(--good);box-shadow:0 0 0 4px color-mix(in srgb,var(--good) 13%,transparent)}.status-rail:has(.status.bad) .status-led{background:var(--bad)}.status-rail:has(.status.warn) .status-led{background:var(--warn)}
+.decode-grid{display:grid;grid-template-columns:1fr;gap:13px}.restore-card{display:none;padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--panel2)}.restore-card.show{display:block}.restore-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--soft);color:var(--accent);font-weight:950}.restore-name{margin-top:8px;font-size:11px;font-weight:900;word-break:break-all}.restore-meta{margin-top:4px;color:var(--muted);font-size:9px}.footer{padding:14px 0 0}.security-details{border-top:1px solid var(--line);padding-top:12px}.security-details summary{cursor:pointer;list-style:none;font-size:9px;font-weight:900;color:var(--muted);text-align:center}.security-details summary::-webkit-details-marker{display:none}.security-details summary:after{content:" +";color:var(--accent)}.security-details[open] summary:after{content:" −"}.security-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.security-grid section{padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--panel2)}.security-grid b{display:block;font-size:8.5px}.security-grid span{display:block;color:var(--muted);font-size:8px;line-height:1.5;margin-top:3px}.footer-signature{text-align:center;color:var(--muted);font-size:8px;padding-top:10px}.file-name,.file-meta,.restore-name,.restore-meta,.password-input,textarea,.local-pill,.flow-board,.volume-board{direction:ltr}.rtl-text{direction:rtl}.ltr-text{direction:ltr}body[data-lang="fa"]{font-family:Tahoma,"Segoe UI",ui-sans-serif,system-ui,sans-serif}html[dir="rtl"] body{text-align:right}html[dir="ltr"] body{text-align:left}
+
+
+@media(max-width:720px){body{padding:10px}.topline{grid-template-columns:auto 1fr auto}.brand-copy span{display:none}.intake-grid{grid-template-columns:1fr}.intake-grid:has(.file-card.show){grid-template-columns:1fr}.file-card.show{display:grid;grid-template-columns:auto 1fr;align-items:start}.drop{min-height:108px}.password-input-row{grid-template-columns:1fr 1fr}.password-input{grid-column:1/-1}.stats-grid{grid-template-columns:1fr 1fr}.stat-card.share{grid-column:1/-1}.security-grid{grid-template-columns:1fr 1fr}.flow-line{grid-template-columns:46px 1fr 52px}.panel{padding:13px;border-radius:17px}.actions.three{grid-template-columns:1fr}.philosophy:before,.philosophy:after{width:15px;margin:0 5px}}
+@media(max-width:430px){.security-grid{grid-template-columns:1fr}.hero h1{font-size:28px}.subtitle{font-size:10px}.philosophy{font-size:11px}.flow-board{padding:11px}.stats-grid{grid-template-columns:1fr}.stat-card{padding:11px}.stat-value{font-size:16px}}
+</style>
+</head>
+<body data-mode="encode" data-lang="fa">
+<main class="shell">
+  <div class="topline">
+    <div class="brand"><a href="https://github.com/TheLouisMahdi/Senvra" target="_blank" rel="noopener noreferrer" aria-label="Open Senvra on GitHub"><div class="logo" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.01.08-2.1 0 0 .67-.21 2.2.82A7.65 7.65 0 0 1 8 4.68c.68 0 1.37.09 2.01.27 1.53-1.04 2.2-.82 2.2-.82.44 1.09.16 1.9.08 2.1.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg></div></a><div class="brand-copy"><b>Senvra</b><a href="https://github.com/TheLouisMahdi/Senvra" target="_blank" rel="noopener noreferrer"><span>by POIMU · github.com/TheLouisMahdi/Senvra</span></a></div></div>
+    <div></div>
+    <div class="language-switch" role="group" aria-label="Language"><button class="lang-btn active" type="button" data-lang-option="fa">FA</button><button class="lang-btn" type="button" data-lang-option="en">EN</button></div>
+  </div>
+
+  <header class="hero">
+    <h1>Senvra</h1>
+    <p class="subtitle" data-i18n="heroSubtitle"></p>
+    <p class="philosophy" data-i18n="philosophy"></p>
+    <div class="local-pill"><span class="local-dot"></span><span data-i18n="localPill"></span></div>
+  </header>
+
+  <nav class="tabs" aria-label="Main tools"><button class="tab active" type="button" data-tab="encode" data-i18n="tabEncode"></button><button class="tab" type="button" data-tab="decode" data-i18n="tabDecode"></button></nav>
+
+  <section class="panel active" id="encode">
+    <div class="title-row"><h2 class="title" data-i18n="encodeTitle"></h2><span class="mode-chip" id="encodeModeChip">READY</span></div>
+    <div class="intake-grid">
+      <label class="drop" id="dropZone" for="fileInput"><div><div class="drop-icon">⇣</div><strong data-i18n="dropTitle"></strong><span data-i18n="dropSubtitle"></span></div></label>
+      <input id="fileInput" type="file">
+      <div class="file-card" id="fileCard"><div class="file-badge">01</div><div class="file-info"><div class="file-name" id="fileName">—</div><div class="file-meta" id="fileMeta">—</div></div></div>
+    </div>
+
+    <div class="security-strip">
+      <div class="password-toggle-row"><div class="password-toggle-copy"><b data-i18n="protectTitle"></b><span data-i18n="protectSubtitle"></span></div><label class="switch" data-i18n-aria="protectAria"><input id="passwordToggle" type="checkbox"><span class="switch-track"></span></label></div>
+      <div class="password-drawer" id="passwordDrawer"><div class="password-card"><div class="encryption-applied" id="encryptionApplied"><span>✓</span><span data-i18n="applied"></span></div><div class="password-head"><div class="password-lock">◆</div><div><b data-i18n="keyTitle"></b><span data-i18n="keySubtitle"></span></div></div><div class="password-input-row"><input class="password-input" id="passwordInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" data-i18n-placeholder="keyPlaceholder"><button class="password-mini primary" id="generatePassword" type="button" data-i18n="generateKey"></button><button class="password-mini" id="copyPassword" type="button" data-i18n="copyKey"></button></div><div class="password-note" id="passwordNote" data-i18n="keyNote"></div></div></div>
+    </div>
+
+    <div class="flow-board" id="encodeFlowBoard">
+      <div class="flow-head"><b data-i18n="flowEncodeTitle"></b><span class="flow-percent" id="encodeProgressText">0%</span></div>
+      <div class="flow-line" id="encodeFlowLine"><span class="flow-end left" id="encodeFromLabel">FILE</span><div class="liquid-track"><div class="liquid-fill" id="encodeFlowFill"><span class="liquid-sheen"></span></div></div><span class="flow-end right" id="encodeToLabel">CODED</span></div>
+      <div class="path-readout" id="encodePath">FILE → SENVRA / TXT / ZIP</div>
+      <div class="stage-strip" id="encodeStages"><span class="stage"></span><span class="stage"></span><span class="stage"></span><span class="stage"></span><span class="stage"></span></div>
+    </div>
+
+    <div class="stats-grid" id="stats">
+      <section class="stat-card good" id="statOriginalCard"><span class="stat-kicker" data-i18n="statOriginal"></span><b class="stat-value" id="originalSize">—</b><small class="stat-note" data-i18n="statOriginalSub"></small></section>
+      <section class="stat-card" id="statPackedCard"><span class="stat-kicker" data-i18n="statPacked"></span><b class="stat-value" id="packedSize">—</b><small class="stat-note" id="packedMethod">AUTO</small></section>
+      <section class="stat-card crypto" id="statCryptoCard"><span class="stat-kicker" data-i18n="statCrypto"></span><b class="stat-value" id="cryptoSize">—</b><small class="stat-note" data-i18n="protectSubtitle"></small></section>
+      <section class="stat-card" id="statTextCard"><span class="stat-kicker" data-i18n="statText"></span><b class="stat-value" id="textPayloadSize">—</b><small class="stat-note" data-i18n="containerHint"></small></section>
+      <section class="stat-card highlight" id="statFinalCard"><span class="stat-kicker" data-i18n="statFinal"></span><b class="stat-value" id="finalTextSize">—</b><small class="stat-note" data-i18n="statFinalSub"></small></section>
+      <section class="stat-card share" id="statShareCard"><span class="stat-kicker" data-i18n="statShare"></span><b class="stat-value" id="shareTotalSize">—</b><small class="stat-note" id="shareTotalNote" data-i18n="statShareSub"></small></section>
+    </div>
+
+    <div class="output">
+      <div class="payload-head"><span class="label" data-i18n="containerLabel"></span><span class="hint" id="outputHint" data-i18n="containerHint"></span></div>
+      <textarea id="codeOutput" readonly spellcheck="false" data-i18n-placeholder="encodePlaceholder"></textarea>
+      <div class="large-placeholder" id="largeEncodePlaceholder" data-i18n="largePreview"></div>
+      <div class="actions"><button class="action" id="copyCode" type="button" data-i18n="copyPoimu"></button><button class="action primary" id="downloadPoimu" type="button" data-i18n="downloadPoimu"></button><button class="action" id="startLargeEncode" type="button" data-i18n="startLarge"></button><button class="action" id="downloadZip" type="button" data-i18n="downloadZip"></button></div>
+      <div class="status-rail"><span class="status-led"></span><div class="status" id="encodeStatus"></div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="decode">
+    <div class="title-row"><h2 class="title" data-i18n="decodeTitle"></h2><span class="mode-chip" id="decodeModeChip">READY</span></div>
+    <div class="flow-board" id="decodeFlowBoard"><div class="flow-head"><b data-i18n="flowDecodeTitle"></b><span class="flow-percent" id="decodeProgressText">0%</span></div><div class="flow-line" id="decodeFlowLine"><span class="flow-end left">CODED</span><div class="liquid-track"><div class="liquid-fill" id="decodeFlowFill"><span class="liquid-sheen"></span></div></div><span class="flow-end right">FILE</span></div><div class="path-readout" id="decodePath">SENVRA / TXT / ZIP → FILE</div><div class="stage-strip" id="decodeStages"><span class="stage"></span><span class="stage"></span><span class="stage"></span><span class="stage"></span><span class="stage"></span></div></div>
+    <div class="decode-grid"><div><div class="payload-head"><span class="label" data-i18n="decodeLabel"></span><span class="hint" data-i18n="decodeHint"></span></div><textarea id="decodeInput" spellcheck="false" data-i18n-placeholder="decodePlaceholder"></textarea><div class="large-placeholder" id="largeDecodePlaceholder" data-i18n="largeDecodeLoaded"></div>
+      <div class="password-drawer" id="decodePasswordDrawer"><div class="password-card"><div class="password-head"><div class="password-lock">◆</div><div><b data-i18n="decodeKeyTitle"></b><span data-i18n="decodeKeySubtitle"></span></div></div><div class="password-input-row"><input class="password-input" id="decodePasswordInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" data-i18n-placeholder="decodeKeyPlaceholder"><button class="password-mini" id="pastePassword" type="button" data-i18n="pasteKey"></button><button class="password-mini" id="clearPassword" type="button" data-i18n="clear"></button></div><div class="password-note" data-i18n="decodeKeyNote"></div></div></div>
+      <input id="poimuInput" type="file" accept=".senvra,.poimu,.txt,.zip,application/octet-stream,text/plain,application/zip"><div class="actions three"><button class="action primary" id="restoreButton" type="button" data-i18n="restoreFile"></button><button class="action" id="loadPoimu" type="button" data-i18n="loadPoimu"></button><button class="action" id="pasteButton" type="button" data-i18n="paste"></button></div><div class="actions"><button class="action" id="clearButton" type="button" data-i18n="clear"></button></div><div class="status-rail"><span class="status-led"></span><div class="status" id="decodeStatus"></div></div></div>
+      <div class="restore-card" id="restoreCard"><div class="restore-icon">✓</div><div class="restore-name" id="restoreName">—</div><div class="restore-meta" id="restoreMeta">—</div><div class="actions"><button class="action primary" id="downloadFile" type="button" data-i18n="downloadOriginal"></button></div></div>
+    </div>
+  </section>
+
+  <footer class="footer"><details class="security-details"><summary data-i18n="securityTitle"></summary><div class="security-grid">
+    <section><b data-i18n="secLocalTitle"></b><span data-i18n="secLocalText"></span></section><section><b data-i18n="secDownloadTitle"></b><span data-i18n="secDownloadText"></span></section><section><b data-i18n="secEncryptTitle"></b><span data-i18n="secEncryptText"></span></section><section><b data-i18n="secIntegrityTitle"></b><span data-i18n="secIntegrityText"></span></section><section><b data-i18n="secPersistenceTitle"></b><span data-i18n="secPersistenceText"></span></section><section><b data-i18n="secClipboardTitle"></b><span data-i18n="secClipboardText"></span></section>
+  </div></details><div class="footer-signature" data-i18n="signature"></div></footer>
+</main>
+<script>"use strict";
+
+/* ================================================================
+   SENVRA 1.0 — PUBLIC RELEASE
+   Simple local file conversion with Senvra, TXT and ZIP outputs.
+   ================================================================ */
+const BINARY_MAGIC = new Uint8Array([0x53,0x45,0x4e,0x56,0x52,0x41,0x42,0x31]); // SENVRAB1
+const LEGACY_BINARY_MAGIC = new Uint8Array([0x50,0x4f,0x49,0x4d,0x55,0x42,0x31,0x00]); // POIMUB1\0
+const TEXT_MAGIC = "SENVRAT1";
+const LEGACY_TEXT_MAGIC = "POIMUT1";
+const FORMAT_VERSION = 1;
+const MAX_FILE_BYTES = 64 * 1024 * 1024;
+const MAX_META_BYTES = 16 * 1024;
+const MAX_CONTAINER_BYTES = MAX_FILE_BYTES + 128 * 1024;
+const MAX_TEXT_BYTES = Math.ceil(MAX_CONTAINER_BYTES * 4 / 3) + 1024;
+const TEXT_PREVIEW_CONTAINER_LIMIT = 768 * 1024;
+const SALT_BYTES = 16;
+const GCM_IV_BYTES = 12;
+const GCM_TAG_BITS = 128;
+const GENERATED_KEY_PREFIX = "P2-";
+const GENERATED_KEY_BYTES = 32;
+const HKDF_INFO = new TextEncoder().encode("SENVRA/BINARY/AES-256-GCM/V1");
+const LEGACY_HKDF_INFO = new TextEncoder().encode("POIMU/BINARY/AES-256-GCM/V1");
+const encoder = new TextEncoder();
+const decoder = new TextDecoder("utf-8", { fatal: true });
+
+const $ = id => document.getElementById(id);
+const dom = {
+  langButtons: [...document.querySelectorAll(".lang-btn")],
+  tabs: [...document.querySelectorAll(".tab")],
+  panels: [...document.querySelectorAll(".panel")],
+  themeColor: $("themeColor"), fileInput: $("fileInput"), dropZone: $("dropZone"),
+  fileCard: $("fileCard"), fileName: $("fileName"), fileMeta: $("fileMeta"),
+  passwordToggle: $("passwordToggle"), passwordDrawer: $("passwordDrawer"),
+  passwordInput: $("passwordInput"),
+  encryptionApplied: $("encryptionApplied"), generatePassword: $("generatePassword"),
+  copyPassword: $("copyPassword"), encodeModeChip: $("encodeModeChip"),
+  decodeModeChip: $("decodeModeChip"), encodeFlowLine: $("encodeFlowLine"),
+  encodeFlowFill: $("encodeFlowFill"), encodeProgressText: $("encodeProgressText"),
+  encodeStages: [...document.querySelectorAll("#encodeStages .stage")], encodePath: $("encodePath"),
+  decodeFlowLine: $("decodeFlowLine"), decodeFlowFill: $("decodeFlowFill"),
+  decodeProgressText: $("decodeProgressText"), decodeStages: [...document.querySelectorAll("#decodeStages .stage")],
+  decodePath: $("decodePath"), originalSize: $("originalSize"), packedSize: $("packedSize"),
+  packedMethod: $("packedMethod"), cryptoSize: $("cryptoSize"), textPayloadSize: $("textPayloadSize"),
+  finalTextSize: $("finalTextSize"), shareTotalSize: $("shareTotalSize"), shareTotalNote: $("shareTotalNote"),
+  codeOutput: $("codeOutput"), largeEncodePlaceholder: $("largeEncodePlaceholder"),
+  startLargeEncode: $("startLargeEncode"), copyCode: $("copyCode"), downloadPoimu: $("downloadPoimu"),
+  downloadZip: $("downloadZip"), encodeStatus: $("encodeStatus"), decodeInput: $("decodeInput"),
+  largeDecodePlaceholder: $("largeDecodePlaceholder"), poimuInput: $("poimuInput"),
+  decodePasswordDrawer: $("decodePasswordDrawer"), decodePasswordInput: $("decodePasswordInput"),
+  pastePassword: $("pastePassword"), clearPassword: $("clearPassword"), restoreButton: $("restoreButton"),
+  loadPoimu: $("loadPoimu"), pasteButton: $("pasteButton"), clearButton: $("clearButton"),
+  decodeStatus: $("decodeStatus"), restoreCard: $("restoreCard"), restoreName: $("restoreName"),
+  restoreMeta: $("restoreMeta"), downloadFile: $("downloadFile")
+};
+
+const state = {
+  language: "fa",
+  containerBytes: null,
+  senvraBlob: null,
+  zipBlob: null,
+  textCache: "",
+  outputBaseName: "file",
+  loadedContainer: null,
+  restoredBytes: null,
+  restoredName: "output.bin",
+  restoredMime: "application/octet-stream"
+};
+
+const I18N = {
+  fa: {
+    heroSubtitle: "فایلت را با Senvra به یک فایل قابل‌حمل، TXT یا ZIP تبدیل کن و هر وقت خواستی دوباره برگردان.",
+    philosophy: "فایل گفت: «اگر هیچ‌وقت آپلود نشوم، هنوز وجود دارم؟» — Senvra گفت: «آروم باش دکارت، فقط داری تبدیل می‌شی.»",
+    localPill: "فایل روی دستگاه خودت می‌ماند · Senvra by POIMU",
+    tabEncode: "تبدیل فایل", tabDecode: "بازگردانی فایل",
+    encodeTitle: "تبدیل فایل", decodeTitle: "بازگردانی فایل اصلی",
+    dropTitle: "فایل را انتخاب کن یا اینجا رها کن", dropSubtitle: "تا ۶۴ MiB · بدون آپلود",
+    protectTitle: "گذاشتن رمز روی فایل", protectSubtitle: "اختیاری · برای محافظت بیشتر", protectAria: "گذاشتن رمز روی فایل",
+    applied: "رمز روی فایل فعال است", keyTitle: "رمز فایل",
+    keySubtitle: "این رمز را نگه دار؛ برای بازکردن فایل لازم می‌شود.", keyPlaceholder: "رمز را وارد کن یا Random Pass بزن",
+    generateKey: "Random Pass", copyKey: "کپی رمز", keyNote: "رمز را جداگانه و در جای امن نگه دار.",
+    statOriginal: "حجم فایل", statOriginalSub: "فایل اصلی", statPacked: "اطلاعات فایل",
+    statCrypto: "حفاظت", statText: "TXT", statFinal: "Senvra", statFinalSub: "فایل آماده دانلود",
+    statShare: "ZIP", statShareSub: "فایل ZIP آماده دانلود",
+    flowEncodeTitle: "تبدیل فایل", flowDecodeTitle: "بازگردانی فایل",
+    containerLabel: "متن قابل کپی", containerHint: "خروجی Senvra، TXT و ZIP در دسترس است.",
+    encodePlaceholder: "بعد از انتخاب فایل، متن قابل کپی اینجا نمایش داده می‌شود.",
+    copyPoimu: "کپی متن", downloadPoimu: "دانلود Senvra", startLarge: "دانلود TXT", downloadZip: "دانلود ZIP",
+    largePreview: "فایل بزرگ است و پیش‌نمایش متن نمایش داده نمی‌شود؛ خروجی‌ها همچنان آماده دانلود هستند.",
+    decodeLabel: "فایل را برگردان", decodeHint: "فایل Senvra، TXT یا ZIP را باز کن یا متن را اینجا Paste کن.",
+    decodePlaceholder: "متن Senvra را اینجا Paste کن", largeDecodeLoaded: "فایل بارگذاری شد.",
+    decodeKeyTitle: "رمز لازم است", decodeKeySubtitle: "رمزی که هنگام ساخت فایل گرفتی وارد کن.",
+    decodeKeyPlaceholder: "رمز فایل", pasteKey: "Paste رمز", clear: "پاک‌کردن",
+    decodeKeyNote: "رمز فقط برای بازکردن همین فایل استفاده می‌شود.", restoreFile: "بازگردانی فایل", loadPoimu: "بازکردن فایل", paste: "Paste", downloadOriginal: "دانلود فایل اصلی",
+    securityTitle: "حریم خصوصی",
+    secLocalTitle: "روی دستگاه شما", secLocalText: "فایل برای تبدیل یا بازگردانی به جایی آپلود نمی‌شود.",
+    secDownloadTitle: "سه خروجی", secDownloadText: "می‌توانی فایل را به صورت Senvra، TXT یا ZIP دانلود کنی.",
+    secEncryptTitle: "رمز اختیاری", secEncryptText: "اگر بخواهی می‌توانی روی فایل رمز بگذاری. برای بازکردن دوباره، همان رمز لازم است.",
+    secIntegrityTitle: "بررسی فایل", secIntegrityText: "بعد از بازگردانی، برنامه بررسی می‌کند فایل سالم و کامل باشد.",
+    secPersistenceTitle: "بدون ذخیره آنلاین", secPersistenceText: "خود برنامه فایلت را در حساب یا فضای آنلاین نگه نمی‌دارد.",
+    secClipboardTitle: "کپی و Paste", secClipboardText: "چیزهایی که کپی می‌کنی ممکن است در تاریخچه Clipboard دستگاه باقی بماند.",
+    signature: "Senvra 1.0 · by POIMU · TheLouisMahdi"
+  },
+  en: {
+    heroSubtitle: "Use Senvra to turn a file into a portable file, TXT or ZIP, then restore it whenever you need it.",
+    philosophy: "The file asked: “If I’m never uploaded, do I still exist?” — Senvra replied: “Easy, Descartes. You’re just being converted.”",
+    localPill: "Your file stays on your device · Senvra by POIMU",
+    tabEncode: "Convert file", tabDecode: "Restore file",
+    encodeTitle: "Convert a file", decodeTitle: "Restore the original file",
+    dropTitle: "Choose a file or drop it here", dropSubtitle: "Up to 64 MiB · no upload",
+    protectTitle: "Add a file password", protectSubtitle: "Optional · for extra protection", protectAria: "Add a password to the file",
+    applied: "Password protection is on", keyTitle: "File password",
+    keySubtitle: "Keep this password; you will need it to open the file later.", keyPlaceholder: "Enter a password or use Random Pass",
+    generateKey: "Random Pass", copyKey: "Copy password", keyNote: "Keep the password somewhere safe and separate.",
+    statOriginal: "File size", statOriginalSub: "original file", statPacked: "File data",
+    statCrypto: "Protection", statText: "TXT", statFinal: "Senvra", statFinalSub: "ready to download",
+    statShare: "ZIP", statShareSub: "ZIP file ready to download",
+    flowEncodeTitle: "Convert file", flowDecodeTitle: "Restore file",
+    containerLabel: "Copyable text", containerHint: "Senvra, TXT and ZIP outputs are available.",
+    encodePlaceholder: "After you choose a file, copyable text appears here.",
+    copyPoimu: "Copy text", downloadPoimu: "Download Senvra", startLarge: "Download TXT", downloadZip: "Download ZIP",
+    largePreview: "This file is large, so the text preview is hidden. All download options are still available.",
+    decodeLabel: "Restore your file", decodeHint: "Open a Senvra, TXT or ZIP file, or paste Senvra text here.",
+    decodePlaceholder: "Paste Senvra text here", largeDecodeLoaded: "File loaded.",
+    decodeKeyTitle: "Password required", decodeKeySubtitle: "Enter the password you received when the file was created.",
+    decodeKeyPlaceholder: "File password", pasteKey: "Paste password", clear: "Clear",
+    decodeKeyNote: "The password is used only to open this file.", restoreFile: "Restore file", loadPoimu: "Open file", paste: "Paste", downloadOriginal: "Download original file",
+    securityTitle: "Privacy",
+    secLocalTitle: "Stays on your device", secLocalText: "Your file is not uploaded when you convert or restore it.",
+    secDownloadTitle: "Three outputs", secDownloadText: "Download your file as Senvra, TXT or ZIP.",
+    secEncryptTitle: "Optional password", secEncryptText: "You can protect a file with a password. The same password is needed to open it later.",
+    secIntegrityTitle: "File check", secIntegrityText: "After restore, the app checks that the file is complete and unchanged.",
+    secPersistenceTitle: "No online storage", secPersistenceText: "The app does not save your files to an account or online storage.",
+    secClipboardTitle: "Copy and paste", secClipboardText: "Anything you copy may remain in your device clipboard history.",
+    signature: "Senvra 1.0 · by POIMU · TheLouisMahdi"
+  }
+};
+
+function tr(key) { return I18N[state.language]?.[key] ?? I18N.en[key] ?? key; }
+function uiText(fa, en) { return state.language === "fa" ? fa : en; }
+function formatBytes(n) {
+  if (!Number.isFinite(n)) return "—";
+  const units = ["B","KiB","MiB","GiB"];
+  let v = n, i = 0;
+  while (v >= 1024 && i < units.length - 1) { v /= 1024; i++; }
+  return (i === 0 ? String(Math.round(v)) : v.toFixed(v >= 100 ? 0 : v >= 10 ? 1 : 2)) + " " + units[i];
+}
+function exactUtf8Size(text) { return encoder.encode(text).byteLength; }
+function setStatus(el, text, kind = "") { el.textContent = text || ""; el.className = "status" + (kind ? " " + kind : ""); }
+function setFlow(side, fraction, stage, label) {
+  const f = Math.max(0, Math.min(1, fraction));
+  const fill = side === "encode" ? dom.encodeFlowFill : dom.decodeFlowFill;
+  const pct = side === "encode" ? dom.encodeProgressText : dom.decodeProgressText;
+  const stages = side === "encode" ? dom.encodeStages : dom.decodeStages;
+  const line = side === "encode" ? dom.encodeFlowLine : dom.decodeFlowLine;
+  fill.style.width = Math.round(f * 100) + "%";
+  pct.textContent = Math.round(f * 100) + "%";
+  stages.forEach((s, i) => s.classList.toggle("on", i <= stage));
+  line.classList.toggle("ready", f >= 1);
+  if (label) (side === "encode" ? dom.encodeModeChip : dom.decodeModeChip).textContent = label;
+}
+function updateLanguage(lang) {
+  state.language = lang === "en" ? "en" : "fa";
+  document.body.dataset.lang = state.language;
+  document.documentElement.lang = state.language;
+  document.documentElement.dir = state.language === "fa" ? "rtl" : "ltr";
+  dom.langButtons.forEach(b => b.classList.toggle("active", b.dataset.langOption === state.language));
+  document.querySelectorAll("[data-i18n]").forEach(el => { const k = el.dataset.i18n; if (I18N[state.language][k] != null) el.textContent = I18N[state.language][k]; });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => { const k = el.dataset.i18nPlaceholder; if (I18N[state.language][k] != null) el.placeholder = I18N[state.language][k]; });
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => { const k = el.dataset.i18nAria; if (I18N[state.language][k] != null) el.setAttribute("aria-label", I18N[state.language][k]); });
+}
+function switchTab(name) {
+  dom.tabs.forEach(t => t.classList.toggle("active", t.dataset.tab === name));
+  dom.panels.forEach(p => p.classList.toggle("active", p.id === name));
+  document.body.dataset.mode = name;
+  dom.themeColor.content = name === "decode" ? "#0b0714" : "#f4f0df";
+}
+function wipeBytes(bytes) { if (bytes instanceof Uint8Array) { try { bytes.fill(0); } catch {} } }
+function wipeEncodeState() {
+  wipeBytes(state.containerBytes); state.containerBytes = null; state.senvraBlob = null; state.zipBlob = null; state.textCache = "";
+}
+function wipeDecodeState() {
+  wipeBytes(state.loadedContainer); wipeBytes(state.restoredBytes); state.loadedContainer = null; state.restoredBytes = null;
+}
+function safeFileName(name) {
+  let s = String(name || "file.bin").normalize("NFKC")
+    .replace(/[\u0000-\u001f\u007f]/g, "")
+    .replace(/[\u202a-\u202e\u2066-\u2069]/g, "")
+    .replace(/[\\/:*?"<>|]/g, "_").trim();
+  s = s.replace(/^\.+/, "").slice(0, 180);
+  return s || "file.bin";
+}
+function safeMime(mime) {
+  const s = String(mime || "application/octet-stream").trim();
+  return /^[\w.+-]+\/[\w.+-]+$/.test(s) ? s.slice(0, 120) : "application/octet-stream";
+}
+function baseName(name) { return safeFileName(name).replace(/\.[^.]*$/, "") || "file"; }
+function concatBytes(...parts) {
+  const total = parts.reduce((n, p) => n + p.byteLength, 0); const out = new Uint8Array(total); let off = 0;
+  for (const p of parts) { out.set(p, off); off += p.byteLength; } return out;
+}
+function u32be(n) { const b = new Uint8Array(4); new DataView(b.buffer).setUint32(0, n >>> 0, false); return b; }
+function readU32be(bytes, off) { if (off < 0 || off + 4 > bytes.byteLength) throw new Error(uiText("فایل کامل نیست.", "File is incomplete.")); return new DataView(bytes.buffer, bytes.byteOffset + off, 4).getUint32(0, false); }
+function bytesToHex(bytes) { let s = ""; for (const b of bytes) s += b.toString(16).padStart(2, "0"); return s; }
+function hexToBytes(hex, expected) {
+  if (typeof hex !== "string" || !/^[0-9a-f]+$/i.test(hex) || hex.length % 2) throw new Error(uiText("فایل معتبر نیست.", "File is not valid."));
+  const out = new Uint8Array(hex.length / 2); for (let i = 0; i < out.length; i++) out[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+  if (expected != null && out.byteLength !== expected) { wipeBytes(out); throw new Error(uiText("فایل معتبر نیست.", "File is not valid.")); } return out;
+}
+function randomBytes(n) { const out = new Uint8Array(n); crypto.getRandomValues(out); return out; }
+async function sha256Hex(bytes) { const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)); try { return bytesToHex(digest); } finally { wipeBytes(digest); } }
+
+function bytesToBase64Url(bytes) {
+  let bin = ""; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+function base64UrlToBytes(text) {
+  if (!/^[A-Za-z0-9_-]+$/.test(text)) throw new Error(uiText("رمز معتبر نیست.", "Password is not valid."));
+  const pad = "=".repeat((4 - text.length % 4) % 4); const raw = atob(text.replace(/-/g, "+").replace(/_/g, "/") + pad);
+  const out = new Uint8Array(raw.length); for (let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i); return out;
+}
+function generateP2Key() { const bytes = randomBytes(GENERATED_KEY_BYTES); try { return GENERATED_KEY_PREFIX + bytesToBase64Url(bytes); } finally { wipeBytes(bytes); } }
+function parseP2Key(text) {
+  const s = String(text || "").trim(); if (!s.startsWith(GENERATED_KEY_PREFIX)) return null;
+  let out; try { out = base64UrlToBytes(s.slice(GENERATED_KEY_PREFIX.length)); } catch { return null; }
+  if (out.byteLength !== GENERATED_KEY_BYTES) { wipeBytes(out); return null; } return out;
+}
+async function deriveAesKey(keyText, salt, info = HKDF_INFO) {
+  const secret = parseP2Key(keyText); if (!secret) throw new Error(uiText("یک رمز معتبر وارد کن.", "Enter a valid password."));
+  try {
+    const material = await crypto.subtle.importKey("raw", secret, "HKDF", false, ["deriveKey"]);
+    return await crypto.subtle.deriveKey({ name: "HKDF", hash: "SHA-512", salt, info }, material, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+  } finally { wipeBytes(secret); }
+}
+
+function validateMeta(meta) {
+  if (!meta || meta.version !== FORMAT_VERSION) throw new Error(uiText("این فایل با نسخه دیگری ساخته شده است.", "This file was made with another version."));
+  if (!Number.isSafeInteger(meta.size) || meta.size < 0 || meta.size > MAX_FILE_BYTES) throw new Error(uiText("اطلاعات فایل معتبر نیست.", "File information is not valid."));
+  if (typeof meta.name !== "string" || typeof meta.mime !== "string" || !/^[0-9a-f]{64}$/i.test(meta.sha256 || "")) throw new Error(uiText("اطلاعات فایل معتبر نیست.", "File information is not valid."));
+  meta.name = safeFileName(meta.name); meta.mime = safeMime(meta.mime);
+  if (typeof meta.encrypted !== "boolean") throw new Error(uiText("اطلاعات فایل معتبر نیست.", "File information is not valid."));
+  if (meta.encrypted) {
+    if (meta.cipher !== "AES-256-GCM" || meta.kdf !== "HKDF-SHA512-RAW256") throw new Error(uiText("این فایل با این نسخه باز نمی‌شود.", "This file cannot be opened by this version."));
+    let s = null, v = null; try { s = hexToBytes(meta.salt, SALT_BYTES); v = hexToBytes(meta.iv, GCM_IV_BYTES); } finally { wipeBytes(s); wipeBytes(v); }
+  }
+  return meta;
+}
+async function buildBinaryContainer(file, rawBytes, keyText) {
+  if (!(rawBytes instanceof Uint8Array) || rawBytes.byteLength !== file.size) throw new Error(uiText("فایل کامل خوانده نشد؛ دوباره امتحان کن.", "The file could not be read completely. Please try again."));
+  const encrypted = Boolean(keyText);
+  let salt = null, iv = null, aesKey = null, payload = null, metaBytes = null;
+  try {
+    const meta = { version: FORMAT_VERSION, name: safeFileName(file.name), mime: safeMime(file.type), size: rawBytes.byteLength, sha256: await sha256Hex(rawBytes), encrypted };
+    if (encrypted) {
+      salt = randomBytes(SALT_BYTES); iv = randomBytes(GCM_IV_BYTES);
+      Object.assign(meta, { cipher: "AES-256-GCM", kdf: "HKDF-SHA512-RAW256", salt: bytesToHex(salt), iv: bytesToHex(iv) });
+    }
+    metaBytes = encoder.encode(JSON.stringify(meta));
+    if (metaBytes.byteLength <= 0 || metaBytes.byteLength > MAX_META_BYTES) throw new Error(uiText("اطلاعات فایل بیش از حد بزرگ است.", "File information is too large."));
+    if (encrypted) {
+      aesKey = await deriveAesKey(keyText, salt);
+      payload = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv, additionalData: metaBytes, tagLength: GCM_TAG_BITS }, aesKey, rawBytes));
+    } else payload = rawBytes.slice();
+    const container = concatBytes(BINARY_MAGIC, u32be(metaBytes.byteLength), metaBytes, payload);
+    if (container.byteLength > MAX_CONTAINER_BYTES) { wipeBytes(container); throw new Error(uiText("فایل بیش از حد بزرگ است.", "The file is too large.")); }
+    return { container, payloadSize: payload.byteLength, cryptoOverhead: encrypted ? payload.byteLength - rawBytes.byteLength : 0 };
+  } finally { wipeBytes(salt); wipeBytes(iv); wipeBytes(metaBytes); if (payload && payload !== rawBytes) wipeBytes(payload); }
+}
+function magicMatches(bytes, magic) {
+  if (!(bytes instanceof Uint8Array) || bytes.byteLength < magic.byteLength) return false;
+  for (let i = 0; i < magic.length; i++) if (bytes[i] !== magic[i]) return false;
+  return true;
+}
+function parseBinaryContainer(bytes) {
+  if (!(bytes instanceof Uint8Array) || bytes.byteLength < BINARY_MAGIC.byteLength + 4) throw new Error(uiText("فایل Senvra کامل نیست.", "Senvra file is incomplete."));
+  if (bytes.byteLength > MAX_CONTAINER_BYTES) throw new Error(uiText("فایل بیش از حد بزرگ است.", "The file is too large."));
+  const legacy = magicMatches(bytes, LEGACY_BINARY_MAGIC);
+  const magic = legacy ? LEGACY_BINARY_MAGIC : BINARY_MAGIC;
+  if (!legacy && !magicMatches(bytes, BINARY_MAGIC)) throw new Error(uiText("این فایل Senvra معتبر نیست.", "This is not a valid Senvra file."));
+  const metaLength = readU32be(bytes, magic.byteLength);
+  const metaStart = magic.byteLength + 4, payloadStart = metaStart + metaLength;
+  if (metaLength <= 0 || metaLength > MAX_META_BYTES || payloadStart > bytes.byteLength) throw new Error(uiText("فایل Senvra معتبر نیست.", "Senvra file is not valid."));
+  const metaBytes = bytes.slice(metaStart, payloadStart); let meta;
+  try { meta = validateMeta(JSON.parse(decoder.decode(metaBytes))); } catch (e) { wipeBytes(metaBytes); throw e; }
+  const payloadLength = bytes.byteLength - payloadStart;
+  const expected = meta.size + (meta.encrypted ? GCM_TAG_BITS / 8 : 0);
+  if (payloadLength !== expected) { wipeBytes(metaBytes); throw new Error(uiText("فایل Senvra ناقص یا خراب است.", "Senvra file is incomplete or damaged.")); }
+  return { meta, metaBytes, payloadStart, legacy };
+}
+async function restoreBinaryContainer(bytes, keyText) {
+  const parsed = parseBinaryContainer(bytes); const { meta, metaBytes, payloadStart, legacy } = parsed;
+  let payload = bytes.slice(payloadStart), plain = null, salt = null, iv = null;
+  try {
+    if (meta.encrypted) {
+      if (!keyText) throw new Error(uiText("رمز فایل را وارد کن.", "Enter the file password."));
+      salt = hexToBytes(meta.salt, SALT_BYTES); iv = hexToBytes(meta.iv, GCM_IV_BYTES);
+      const key = await deriveAesKey(keyText, salt, legacy ? LEGACY_HKDF_INFO : HKDF_INFO);
+      try { plain = new Uint8Array(await crypto.subtle.decrypt({ name: "AES-GCM", iv, additionalData: metaBytes, tagLength: GCM_TAG_BITS }, key, payload)); }
+      catch { throw new Error(uiText("رمز درست نیست یا فایل خراب شده است.", "Wrong password or damaged file.")); }
+    } else plain = payload.slice();
+    if (plain.byteLength !== meta.size) throw new Error(uiText("فایل بازگردانی‌شده کامل نیست.", "The restored file is not complete."));
+    if ((await sha256Hex(plain)).toLowerCase() !== meta.sha256.toLowerCase()) throw new Error(uiText("فایل بازگردانی‌شده سالم نیست.", "The restored file did not pass the file check."));
+    return { bytes: plain, name: meta.name, mime: meta.mime, encrypted: meta.encrypted };
+  } finally { wipeBytes(metaBytes); wipeBytes(payload); wipeBytes(salt); wipeBytes(iv); }
+}
+
+function bytesToBase64(bytes) {
+  let out = "";
+  for (let i = 0; i < bytes.length; i += 0x6000) out += btoa(String.fromCharCode(...bytes.subarray(i, i + 0x6000)));
+  return out;
+}
+function base64ToBytes(text) {
+  const clean = text.replace(/\s+/g, "");
+  if (!/^[A-Za-z0-9+/]*={0,2}$/.test(clean) || clean.length % 4 !== 0) throw new Error(uiText("متن واردشده معتبر نیست.", "The pasted text is not valid."));
+  const raw = atob(clean); if (raw.length > MAX_CONTAINER_BYTES) throw new Error(uiText("متن یا فایل واردشده بیش از حد بزرگ است.", "The pasted file is too large."));
+  const out = new Uint8Array(raw.length); for (let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i); return out;
+}
+function containerToText(bytes) { return TEXT_MAGIC + "\n" + bytesToBase64(bytes) + "\n"; }
+function textToContainer(text) {
+  const value = String(text || "").trim();
+  const magic = value.startsWith(TEXT_MAGIC + "\n") ? TEXT_MAGIC : value.startsWith(LEGACY_TEXT_MAGIC + "\n") ? LEGACY_TEXT_MAGIC : null;
+  if (!magic) throw new Error(uiText("متن Senvra معتبر وارد کن.", "Paste valid Senvra text."));
+  if (value.length > MAX_TEXT_BYTES) throw new Error(uiText("متن واردشده بیش از حد بزرگ است.", "The pasted text is too large."));
+  return base64ToBytes(value.slice(magic.length + 1));
+}
+function predictedTextSize(containerSize) { return exactUtf8Size(TEXT_MAGIC + "\n") + 4 * Math.ceil(containerSize / 3) + 1; }
+
+let crcTable = null;
+function getCrcTable() {
+  if (crcTable) return crcTable; crcTable = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = (c & 1) ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1); crcTable[n] = c >>> 0; }
+  return crcTable;
+}
+function crc32(bytes) { const t = getCrcTable(); let c = 0xffffffff; for (const b of bytes) c = t[(c ^ b) & 255] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; }
+function dosDateTime(date = new Date()) {
+  const year = Math.max(1980, Math.min(2107, date.getFullYear()));
+  const time = ((date.getHours() & 31) << 11) | ((date.getMinutes() & 63) << 5) | ((date.getSeconds() >> 1) & 31);
+  const day = ((year - 1980) << 9) | (((date.getMonth() + 1) & 15) << 5) | (date.getDate() & 31);
+  return { time, day };
+}
+function zipHeader(size, crc, nameBytes, central, dt) {
+  const b = new Uint8Array(central ? 46 : 30), v = new DataView(b.buffer);
+  let o = 0;
+  v.setUint32(o, central ? 0x02014b50 : 0x04034b50, true); o += 4;
+  if (central) { v.setUint16(o, 20, true); o += 2; }
+  v.setUint16(o, 20, true); o += 2; v.setUint16(o, 0x0800, true); o += 2; v.setUint16(o, 0, true); o += 2;
+  v.setUint16(o, dt.time, true); o += 2; v.setUint16(o, dt.day, true); o += 2; v.setUint32(o, crc, true); o += 4;
+  v.setUint32(o, size, true); o += 4; v.setUint32(o, size, true); o += 4; v.setUint16(o, nameBytes.byteLength, true); o += 2;
+  v.setUint16(o, 0, true); o += 2;
+  if (central) { v.setUint16(o, 0, true); o += 2; v.setUint16(o, 0, true); o += 2; v.setUint16(o, 0, true); o += 2; v.setUint32(o, 0, true); o += 4; v.setUint32(o, 0, true); }
+  return b;
+}
+function createStoredZipBlob(containerBytes, entryName) {
+  if (containerBytes.byteLength > 0xffffffff) throw new Error(uiText("فایل ZIP بیش از حد بزرگ است.", "ZIP file is too large."));
+  const nameBytes = encoder.encode(safeFileName(entryName)); if (nameBytes.byteLength > 65535) throw new Error(uiText("نام فایل بیش از حد طولانی است.", "File name is too long."));
+  const crc = crc32(containerBytes), dt = dosDateTime(), local = zipHeader(containerBytes.byteLength, crc, nameBytes, false, dt), central = zipHeader(containerBytes.byteLength, crc, nameBytes, true, dt);
+  const centralOffset = local.byteLength + nameBytes.byteLength + containerBytes.byteLength;
+  const eocd = new Uint8Array(22), v = new DataView(eocd.buffer);
+  v.setUint32(0, 0x06054b50, true); v.setUint16(4, 0, true); v.setUint16(6, 0, true); v.setUint16(8, 1, true); v.setUint16(10, 1, true);
+  v.setUint32(12, central.byteLength + nameBytes.byteLength, true); v.setUint32(16, centralOffset, true); v.setUint16(20, 0, true);
+  return new Blob([local, nameBytes, containerBytes, central, nameBytes, eocd], { type: "application/zip" });
+}
+function extractStoredPoimuFromZip(bytes) {
+  if (!(bytes instanceof Uint8Array) || bytes.byteLength < 22 || bytes.byteLength > MAX_CONTAINER_BYTES + 65536) throw new Error(uiText("فایل ZIP معتبر نیست یا بیش از حد بزرگ است.", "ZIP file is not valid or is too large."));
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  let eocd = -1; const min = Math.max(0, bytes.byteLength - 65557);
+  for (let i = bytes.byteLength - 22; i >= min; i--) if (view.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  if (eocd < 0) throw new Error(uiText("فایل ZIP معتبر نیست.", "ZIP file is not valid."));
+  const entries = view.getUint16(eocd + 10, true), centralSize = view.getUint32(eocd + 12, true), centralOffset = view.getUint32(eocd + 16, true);
+  if (entries !== 1 || centralOffset + centralSize !== eocd || centralSize < 46 || centralOffset + 46 > bytes.byteLength || view.getUint32(centralOffset, true) !== 0x02014b50) throw new Error(uiText("این ZIP فایل Senvra قابل‌بازکردن ندارد.", "This ZIP does not contain a usable Senvra file."));
+  const flags = view.getUint16(centralOffset + 8, true), method = view.getUint16(centralOffset + 10, true), crc = view.getUint32(centralOffset + 16, true);
+  const compSize = view.getUint32(centralOffset + 20, true), rawSize = view.getUint32(centralOffset + 24, true), nameLen = view.getUint16(centralOffset + 28, true), extraLen = view.getUint16(centralOffset + 30, true), commentLen = view.getUint16(centralOffset + 32, true), localOffset = view.getUint32(centralOffset + 42, true);
+  if ((flags & 1) || method !== 0 || compSize !== rawSize || rawSize > MAX_CONTAINER_BYTES) throw new Error(uiText("این نوع ZIP پشتیبانی نمی‌شود.", "This ZIP format is not supported."));
+  if (centralOffset + 46 + nameLen + extraLen + commentLen > bytes.byteLength || localOffset + 30 > bytes.byteLength || view.getUint32(localOffset, true) !== 0x04034b50) throw new Error(uiText("فایل ZIP معتبر نیست.", "ZIP file is not valid."));
+  const localFlags = view.getUint16(localOffset + 6, true), localMethod = view.getUint16(localOffset + 8, true), localCrc = view.getUint32(localOffset + 14, true), localComp = view.getUint32(localOffset + 18, true), localRaw = view.getUint32(localOffset + 22, true);
+  const localNameLen = view.getUint16(localOffset + 26, true), localExtraLen = view.getUint16(localOffset + 28, true), dataStart = localOffset + 30 + localNameLen + localExtraLen, dataEnd = dataStart + compSize;
+  if (localFlags !== flags || localMethod !== method || localCrc !== crc || localComp !== compSize || localRaw !== rawSize || dataEnd > bytes.byteLength) throw new Error(uiText("فایل ZIP خراب است.", "ZIP file is damaged."));
+  const out = bytes.slice(dataStart, dataEnd); if (crc32(out) !== crc) { wipeBytes(out); throw new Error(uiText("فایل ZIP خراب است.", "ZIP file is damaged.")); }
+  return out;
+}
+
+function isBinaryContainer(bytes) { return magicMatches(bytes, BINARY_MAGIC) || magicMatches(bytes, LEGACY_BINARY_MAGIC); }
+function isZip(bytes) { return bytes instanceof Uint8Array && bytes.byteLength >= 4 && bytes[0] === 0x50 && bytes[1] === 0x4b && bytes[2] === 0x03 && bytes[3] === 0x04; }
+function inspectLoadedContainer(bytes) { const parsed = parseBinaryContainer(bytes); wipeBytes(parsed.metaBytes); return parsed.meta; }
+function resetEncodeUi() {
+  dom.originalSize.textContent = dom.packedSize.textContent = dom.cryptoSize.textContent = dom.textPayloadSize.textContent = dom.finalTextSize.textContent = dom.shareTotalSize.textContent = "—";
+  dom.packedMethod.textContent = state.language === "fa" ? "آماده" : "Ready"; dom.codeOutput.value = ""; dom.codeOutput.style.display = "block"; dom.largeEncodePlaceholder.classList.remove("show");
+  setFlow("encode", 0, -1, uiText("آماده", "READY")); dom.encodePath.textContent = "FILE → SENVRA / TXT / ZIP";
+}
+function resetDecodeUi() {
+  dom.restoreCard.classList.remove("show"); dom.decodeInput.value = ""; dom.decodeInput.style.display = "block"; dom.largeDecodePlaceholder.classList.remove("show"); dom.decodePasswordDrawer.classList.remove("open");
+  setFlow("decode", 0, -1, uiText("آماده", "READY")); dom.decodePath.textContent = "SENVRA / TXT / ZIP → FILE";
+}
+function renderEncodeMetrics(original, payload, cryptoOverhead, containerSize, zipSize, encrypted) {
+  dom.originalSize.textContent = formatBytes(original); dom.packedSize.textContent = formatBytes(payload); dom.cryptoSize.textContent = formatBytes(cryptoOverhead);
+  dom.textPayloadSize.textContent = formatBytes(predictedTextSize(containerSize)); dom.finalTextSize.textContent = formatBytes(containerSize); dom.shareTotalSize.textContent = formatBytes(zipSize);
+  dom.packedMethod.textContent = encrypted ? uiText("رمز فعال", "Password on") : uiText("آماده", "Ready"); dom.shareTotalNote.textContent = tr("statShareSub");
+}
+async function encodeFile(file) {
+  wipeEncodeState(); resetEncodeUi();
+  if (!(file instanceof File)) return;
+  if (file.size > MAX_FILE_BYTES) { setStatus(dom.encodeStatus, uiText("حجم فایل بیشتر از ۶۴ MiB است.", "File is larger than 64 MiB."), "bad"); return; }
+  const encrypted = dom.passwordToggle.checked; const keyText = encrypted ? dom.passwordInput.value.trim() : "";
+  if (encrypted && !parseP2Key(keyText)) { setStatus(dom.encodeStatus, state.language === "fa" ? "رمز فعال است؛ ابتدا یک رمز بساز یا وارد کن." : "Password protection is on; create or enter a password first.", "warn"); return; }
+  dom.fileCard.classList.add("show"); dom.fileName.textContent = safeFileName(file.name); dom.fileMeta.textContent = formatBytes(file.size) + (file.type ? " · " + safeMime(file.type) : "");
+  setStatus(dom.encodeStatus, state.language === "fa" ? "در حال آماده‌کردن فایل…" : "Preparing file…");
+  setFlow("encode", .15, 0, uiText("در حال خواندن", "READING"));
+  let raw = new Uint8Array(await file.arrayBuffer());
+  try {
+    setFlow("encode", .4, 1, encrypted ? uiText("در حال محافظت", "PROTECTING") : uiText("در حال ساخت", "BUILDING"));
+    const built = await buildBinaryContainer(file, raw, keyText);
+    state.containerBytes = built.container; state.senvraBlob = new Blob([built.container], { type: "application/octet-stream" }); state.outputBaseName = baseName(file.name);
+    state.zipBlob = createStoredZipBlob(built.container, state.outputBaseName + ".senvra");
+    state.textCache = "";
+    if (built.container.byteLength <= TEXT_PREVIEW_CONTAINER_LIMIT) {
+      state.textCache = containerToText(built.container); dom.codeOutput.value = state.textCache; dom.codeOutput.style.display = "block"; dom.largeEncodePlaceholder.classList.remove("show");
+    } else {
+      dom.codeOutput.value = ""; dom.codeOutput.style.display = "none"; dom.largeEncodePlaceholder.classList.add("show");
+    }
+    renderEncodeMetrics(file.size, built.payloadSize, built.cryptoOverhead, built.container.byteLength, state.zipBlob.size, encrypted);
+    dom.encryptionApplied.classList.toggle("show", encrypted); dom.encodePath.textContent = encrypted ? "FILE → PASSWORD → SENVRA / TXT / ZIP" : "FILE → SENVRA / TXT / ZIP";
+    setFlow("encode", 1, 4, uiText("آماده", "READY"));
+    setStatus(dom.encodeStatus, (state.language === "fa" ? "آماده دانلود: " : "Ready to download: ") + state.outputBaseName + ".senvra · " + formatBytes(built.container.byteLength), "good");
+  } catch (e) { wipeEncodeState(); setStatus(dom.encodeStatus, String(e?.message || e), "bad"); }
+  finally { wipeBytes(raw); raw = null; }
+}
+function ensureTextCache() { if (!state.containerBytes) throw new Error(uiText("اول یک فایل انتخاب کن.", "Choose a file first.")); if (!state.textCache) state.textCache = containerToText(state.containerBytes); return state.textCache; }
+function downloadBlob(blob, name) {
+  const url = URL.createObjectURL(blob), a = document.createElement("a"); a.href = url; a.download = safeFileName(name); a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+async function loadInputFile(file) {
+  wipeDecodeState(); resetDecodeUi();
+  if (!(file instanceof File)) return;
+  const limit = Math.max(MAX_TEXT_BYTES, MAX_CONTAINER_BYTES + 65536); if (file.size > limit) { setStatus(dom.decodeStatus, uiText("فایل بیش از حد بزرگ است.", "The file is too large."), "bad"); return; }
+  setStatus(dom.decodeStatus, state.language === "fa" ? "در حال بازکردن فایل…" : "Opening file…"); setFlow("decode", .2, 0, uiText("در حال بازکردن", "OPENING"));
+  let bytes = new Uint8Array(await file.arrayBuffer()), container = null;
+  try {
+    if (isZip(bytes)) container = extractStoredPoimuFromZip(bytes);
+    else if (isBinaryContainer(bytes)) container = bytes.slice();
+    else {
+      let text; try { text = decoder.decode(bytes); } catch { throw new Error(uiText("یک فایل Senvra، TXT یا ZIP باز کن.", "Open a Senvra, TXT or ZIP file.")); }
+      container = textToContainer(text); dom.decodeInput.value = text.length <= 2 * 1024 * 1024 ? text : "";
+    }
+    const meta = inspectLoadedContainer(container); state.loadedContainer = container; container = null;
+    dom.decodePasswordDrawer.classList.toggle("open", meta.encrypted); dom.decodeInput.style.display = "none"; dom.largeDecodePlaceholder.classList.add("show");
+    dom.decodePath.textContent = (file.name.toLowerCase().endsWith(".zip") ? "ZIP" : file.name.toLowerCase().endsWith(".txt") ? "TXT" : "SENVRA") + " → FILE";
+    setFlow("decode", .45, 1, meta.encrypted ? uiText("رمز لازم است", "PASSWORD") : uiText("آماده", "READY"));
+    setStatus(dom.decodeStatus, (state.language === "fa" ? "بارگذاری شد: " : "Loaded: ") + meta.name + " · " + formatBytes(meta.size), "good");
+  } catch (e) { wipeBytes(container); setStatus(dom.decodeStatus, String(e?.message || e), "bad"); }
+  finally { wipeBytes(bytes); }
+}
+async function restoreCurrent() {
+  wipeBytes(state.restoredBytes); state.restoredBytes = null; dom.restoreCard.classList.remove("show");
+  let container = state.loadedContainer, owned = false;
+  try {
+    if (!container) { if (!dom.decodeInput.value.trim()) throw new Error(uiText("اول یک فایل باز کن یا متن Senvra را Paste کن.", "Open a file or paste Senvra text first.")); container = textToContainer(dom.decodeInput.value); owned = true; }
+    const meta = inspectLoadedContainer(container); if (meta.encrypted) dom.decodePasswordDrawer.classList.add("open");
+    const keyText = meta.encrypted ? dom.decodePasswordInput.value.trim() : ""; if (meta.encrypted && !parseP2Key(keyText)) throw new Error(uiText("رمز فایل را وارد کن.", "Enter the file password."));
+    setStatus(dom.decodeStatus, state.language === "fa" ? "در حال بررسی فایل…" : "Checking file…"); setFlow("decode", .65, 2, uiText("در حال بررسی", "CHECKING"));
+    const restored = await restoreBinaryContainer(container, keyText); state.restoredBytes = restored.bytes; state.restoredName = restored.name; state.restoredMime = restored.mime;
+    dom.restoreName.textContent = restored.name; dom.restoreMeta.textContent = formatBytes(restored.bytes.byteLength) + " · " + uiText("فایل سالم", "File checked"); dom.restoreCard.classList.add("show");
+    setFlow("decode", 1, 4, uiText("آماده", "READY")); setStatus(dom.decodeStatus, state.language === "fa" ? "فایل سالم است و آماده دانلود است." : "File is ready to download.", "good");
+  } catch (e) { setStatus(dom.decodeStatus, String(e?.message || e), "bad"); }
+  finally { if (owned) wipeBytes(container); }
+}
+function clearDecode() { wipeDecodeState(); resetDecodeUi(); dom.decodePasswordInput.value = ""; setStatus(dom.decodeStatus, ""); }
+
+for (const b of dom.langButtons) b.addEventListener("click", () => updateLanguage(b.dataset.langOption));
+for (const t of dom.tabs) t.addEventListener("click", () => switchTab(t.dataset.tab));
+async function copyTextToClipboard(text) {
+  const value = String(text ?? "");
+  if (!value) throw new Error(uiText("چیزی برای کپی وجود ندارد.", "There is nothing to copy."));
+
+  if (navigator.clipboard && globalThis.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return;
+    } catch {}
+  }
+
+  const helper = document.createElement("textarea");
+  helper.value = value;
+  helper.setAttribute("readonly", "");
+  helper.setAttribute("aria-hidden", "true");
+  helper.style.position = "fixed";
+  helper.style.top = "0";
+  helper.style.left = "-9999px";
+  helper.style.width = "1px";
+  helper.style.height = "1px";
+  helper.style.opacity = "0";
+  helper.style.pointerEvents = "none";
+  document.body.appendChild(helper);
+  try {
+    helper.focus();
+    helper.select();
+    helper.setSelectionRange(0, helper.value.length);
+    if (!document.execCommand("copy")) throw new Error(uiText("کپی توسط مرورگر انجام نشد.", "The browser did not allow copying."));
+  } finally {
+    helper.remove();
+  }
+}
+
+dom.passwordToggle.addEventListener("change", () => { dom.passwordDrawer.classList.toggle("open", dom.passwordToggle.checked); dom.encryptionApplied.classList.remove("show"); });
+dom.generatePassword.addEventListener("click", () => { dom.passwordInput.value = generateP2Key(); setStatus(dom.encodeStatus, state.language === "fa" ? "رمز تصادفی ساخته شد؛ آن را جداگانه نگه دار." : "Random password created; keep it separately.", "good"); });
+dom.copyPassword.addEventListener("click", async () => { if (!parseP2Key(dom.passwordInput.value)) { setStatus(dom.encodeStatus, uiText("اول رمز وارد کن یا Random Pass بزن.", "Enter a password or use Random Pass first."), "warn"); return; } try { await copyTextToClipboard(dom.passwordInput.value.trim()); setStatus(dom.encodeStatus, state.language === "fa" ? "رمز در Clipboard کپی شد." : "Password copied to the clipboard.", "good"); } catch (e) { setStatus(dom.encodeStatus, String(e?.message || e), "warn"); } });
+dom.fileInput.addEventListener("change", () => { const f = dom.fileInput.files?.[0]; if (f) encodeFile(f); });
+for (const evt of ["dragenter","dragover"]) dom.dropZone.addEventListener(evt, e => { e.preventDefault(); dom.dropZone.classList.add("drag"); });
+for (const evt of ["dragleave","drop"]) dom.dropZone.addEventListener(evt, e => { e.preventDefault(); dom.dropZone.classList.remove("drag"); });
+dom.dropZone.addEventListener("drop", e => { const f = e.dataTransfer?.files?.[0]; if (f) encodeFile(f); });
+dom.copyCode.addEventListener("click", async () => { try { const text = ensureTextCache(); await copyTextToClipboard(text); setStatus(dom.encodeStatus, state.language === "fa" ? "متن در Clipboard کپی شد." : "Text copied to the clipboard.", "good"); } catch (e) { setStatus(dom.encodeStatus, String(e?.message || e), "warn"); } });
+dom.downloadPoimu.addEventListener("click", () => { if (!state.senvraBlob) return; downloadBlob(state.senvraBlob, state.outputBaseName + ".senvra"); });
+dom.startLargeEncode.addEventListener("click", () => { try { const text = ensureTextCache(); downloadBlob(new Blob([text], { type: "text/plain;charset=utf-8" }), state.outputBaseName + ".txt"); } catch (e) { setStatus(dom.encodeStatus, String(e?.message || e), "bad"); } });
+dom.downloadZip.addEventListener("click", () => { if (!state.zipBlob) return; downloadBlob(state.zipBlob, state.outputBaseName + ".zip"); });
+dom.loadPoimu.addEventListener("click", () => dom.poimuInput.click());
+dom.poimuInput.addEventListener("change", () => { const f = dom.poimuInput.files?.[0]; if (f) loadInputFile(f); });
+dom.pasteButton.addEventListener("click", async () => { try { wipeBytes(state.loadedContainer); state.loadedContainer = null; dom.decodeInput.style.display = "block"; dom.largeDecodePlaceholder.classList.remove("show"); dom.decodeInput.value = await navigator.clipboard.readText(); setStatus(dom.decodeStatus, state.language === "fa" ? "متن وارد شد." : "Text pasted.", "good"); } catch { setStatus(dom.decodeStatus, state.language === "fa" ? "Paste خودکار ممکن نیست؛ دستی Paste کن." : "Automatic paste is not available; paste it manually.", "warn"); } });
+dom.pastePassword.addEventListener("click", async () => { try { dom.decodePasswordInput.value = await navigator.clipboard.readText(); } catch { setStatus(dom.decodeStatus, uiText("Paste خودکار ممکن نیست.", "Automatic paste is not available."), "warn"); } });
+dom.clearPassword.addEventListener("click", () => { dom.decodePasswordInput.value = ""; });
+dom.restoreButton.addEventListener("click", restoreCurrent); dom.clearButton.addEventListener("click", clearDecode);
+dom.downloadFile.addEventListener("click", () => { if (!state.restoredBytes) return; downloadBlob(new Blob([state.restoredBytes], { type: state.restoredMime }), state.restoredName); });
+window.addEventListener("pagehide", () => { wipeEncodeState(); wipeDecodeState(); dom.passwordInput.value = ""; dom.decodePasswordInput.value = ""; });
+
+updateLanguage("fa"); resetEncodeUi(); resetDecodeUi(); setStatus(dom.encodeStatus, ""); setStatus(dom.decodeStatus, "");
+</script>
+</body>
+</html>
