@@ -13,7 +13,7 @@ Senvra is designed as a local-first browser tool. Its public documentation inten
 - Keep file processing local to the browser whenever possible.
 - Make password protection optional and easy to use.
 - Keep the password separate from the protected output.
-- Check restored files for unexpected modification or corruption.
+- Check restored Senvra files for unexpected modification or corruption.
 - Avoid external runtime dependencies in the application itself.
 - Keep the application usable as a single local HTML file.
 
@@ -21,7 +21,9 @@ Senvra is designed as a local-first browser tool. Its public documentation inten
 
 Senvra cannot protect a file from someone who already controls your device, browser session, clipboard, downloaded files, screenshots, backups, or operating-system history.
 
-Text export is a transport format, not a confidentiality feature by itself. Use password protection when the contents need to remain private.
+Base64 and TXT are file representations or transport formats, not confidentiality features by themselves. Use Senvra password protection when the contents need to remain private.
+
+Password protection applies to Senvra transport output; ordinary Base64 should not be treated as protected or hidden data.
 
 ## Reporting a security issue
 
