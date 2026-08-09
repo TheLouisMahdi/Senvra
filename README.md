@@ -8,6 +8,16 @@ Senvra is a single-file browser tool for working with ordinary files, `.senvra` 
 
 **Created by POIMU · [TheLouisMahdi](https://github.com/TheLouisMahdi)**
 
+## Current release
+
+**Senvra 1.2** is the current public release. The complete application is [`index.html`](index.html); there is no separate build output or runtime package required.
+
+SHA-256 of the current `index.html`:
+
+```text
+953c8363d2cc5a82ff7d93831d5fbd099e56502b349b218d577cb99bd4577c35
+```
+
 ---
 
 ## What Senvra does
