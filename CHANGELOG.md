@@ -2,6 +2,24 @@
 
 All notable public changes to Senvra are documented here.
 
+## 1.1.0 — 2026-08-09
+
+### Added
+
+- Dedicated **Base64** action for copying the original selected file as standard Base64 text.
+- Developer workflow for embedding small images, icons, templates, fixtures, and other assets directly inside Python, HTML, JSON, or single-file utilities.
+- Python Base64 embedding example under `examples/base64_embed.py`.
+
+### Changed
+
+- Public documentation now treats Base64 as a first-class developer use case alongside Senvra, TXT, and ZIP transport workflows.
+- UI copy and version label updated for Senvra 1.1.
+
+### Notes
+
+- Base64 represents the original file bytes directly; it is separate from Senvra password protection.
+- Base64 is not hashing, encryption, or compression and is normally larger than the original binary file.
+
 ## 1.0.0 — 2026-08-08
 
 Initial public release.
