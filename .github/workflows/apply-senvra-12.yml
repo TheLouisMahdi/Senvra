@@ -1,0 +1,36 @@
+name: Apply Senvra 1.2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/senvra12.patch.gz.b64'
+      - '.github/workflows/apply-senvra-12.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply tested Senvra 1.2 patch
+        run: |
+          base64 -d scripts/senvra12.patch.gz.b64 | gzip -d > /tmp/senvra12.patch
+          git apply --check /tmp/senvra12.patch
+          git apply /tmp/senvra12.patch
+          python - <<'PY'
+          import re, pathlib
+          s = pathlib.Path('index.html').read_text(encoding='utf-8')
+          js = re.search(r'<script>([\s\S]*?)</script>', s).group(1)
+          pathlib.Path('/tmp/senvra.js').write_text(js, encoding='utf-8')
+          PY
+          node --check /tmp/senvra.js
+      - name: Commit Senvra 1.2
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Make Base64 a general input and output" || exit 0
+          git push
