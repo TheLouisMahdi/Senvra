@@ -1,155 +1,169 @@
 # Senvra
 
-**A simple, local-first way to convert, protect, send, embed, and restore files — directly in your browser.**
+**A simple, local-first way to convert, protect, send, represent, and restore files directly in your browser.**
 
 > *“The file asked: If I’m never uploaded, do I still exist? — Senvra replied: Easy, Descartes. You’re just being converted.”*
 
-Senvra is a single-file browser tool for turning ordinary files into formats that can be easier to store, move, paste, send, or embed in code. It runs locally in the browser and is designed for people who want a simple workflow without installing an application or uploading their file to a processing server.
+Senvra is a single-file browser tool for working with ordinary files, `.senvra` packages, TXT, ZIP, and standard Base64. It runs locally in the browser and is designed to keep everyday file conversion simple without requiring an installed application or a processing server.
 
 **Created by POIMU · [TheLouisMahdi](https://github.com/TheLouisMahdi)**
 
 ---
 
+## What Senvra does
+
+Senvra lets the same file move between several practical forms:
+
+- **Normal file → Senvra** — create a portable `.senvra` file.
+- **Normal file → Base64** — copy the original file as standard Base64 text.
+- **Base64 → Senvra** — paste ordinary Base64 and create a `.senvra` file from it.
+- **Base64 → file** — paste Base64 and restore the underlying file bytes.
+- **Senvra → TXT** — carry a Senvra package as ordinary text.
+- **Senvra → ZIP** — wrap it in a widely supported ZIP container.
+- **Optional password** — protect Senvra/TXT/ZIP output when privacy matters.
+
+Base64 is treated as a normal input/output format rather than a separate developer-only feature.
+
 ## Why Senvra?
 
-Sometimes the hard part is not the file itself — it is getting the file through the place you need to send it, or keeping a small asset inside a project without carrying another external file.
+Sometimes the difficult part is not creating a file — it is getting that file through the service where you need to send it.
 
-Messaging apps, upload forms, email gateways, corporate systems, educational portals, and other services may reject certain file extensions or make some file types inconvenient to transfer. This can be especially noticeable for users in Iran, where people may regularly move files through a mix of local and international services with different upload restrictions.
+Messaging apps, upload forms, email systems, educational portals, company systems, and other services may reject certain extensions or handle some file types poorly. This can be especially noticeable for users in Iran, where a file may need to pass through several local and international services with different upload rules.
 
-Senvra gives the same file several practical ways to travel or live inside a project:
+Senvra gives you alternative representations without changing the original contents.
 
-- **Senvra file (`.senvra`)** — the native portable form.
-- **ZIP (`.zip`)** — useful when an uploader accepts ZIP more easily than the original file type. Senvra uses ZIP as a compatibility wrapper; it is not a promise of smaller file size.
-- **Text (`.txt`)** — represents the Senvra package as ordinary text, so it can be saved, copied, pasted, or sent through text-friendly channels.
-- **Base64** — copies the original file bytes as standard Base64 text, useful for embedding small assets directly inside source code, configuration, JSON, HTML, test fixtures, or scripts.
-- **Optional password protection** — add a password before creating Senvra/TXT/ZIP output when the contents should stay private between sender and receiver.
+### Use ZIP when the original extension is difficult to upload
 
-## Common uses
+If an uploader refuses the original file type, Senvra can create a **ZIP** output. ZIP is broadly supported by uploaders and messaging services, so it is often easier to send than an unusual or blocked extension.
 
-### Embed an image or file directly in source code
-
-The **Base64** action is useful when a project should not depend on a separate small asset file.
-
-For example, copy an image as Base64 with Senvra and place it directly in a Python variable:
-
-```python
-import base64
-
-ASSET_B64 = "PASTE_BASE64_HERE"
-asset_bytes = base64.b64decode(ASSET_B64)
-```
-
-Now `asset_bytes` contains the original file bytes and can be passed to code that accepts in-memory bytes, or written back only when needed:
-
-```python
-from pathlib import Path
-
-Path("asset.png").write_bytes(asset_bytes)
-```
-
-This can be useful for:
-
-- small icons and images
-- embedded templates or configuration files
-- certificates or public test assets
-- fixtures used by automated tests
-- single-file Python utilities
-- HTML/CSS data assets
-- small resources that should travel with the source code
-
-For an HTML image data URI, add the appropriate MIME prefix yourself, for example:
-
-```html
-<img src="data:image/png;base64,PASTE_BASE64_HERE" alt="Embedded image">
-```
-
-> **Base64 is not a hash, encryption, or compression.** It is a reversible text representation of the original bytes and is usually about one-third larger than the binary file. Use it mainly for portability and embedding small files.
-
-### Send a file through a restrictive uploader
-
-If a service refuses the original extension, create a **ZIP output** with Senvra. ZIP is accepted by many upload forms and messaging systems, so it can be a practical compatibility option when direct upload is difficult.
-
-This is particularly useful in everyday workflows in Iran, where different local and international uploaders can have inconsistent extension policies. Senvra does not bypass a service's rules; it simply gives you standard transport formats that may already be accepted by that service.
+Senvra uses ZIP mainly for compatibility. It does not promise that ZIP will make the file smaller, and it does not claim that every service will accept every ZIP file.
 
 ### Send a file as text
 
-A file can also be exported as **TXT**. This is useful when you want to move data through a text-friendly channel, paste it into a message, or store it somewhere that handles text more easily than arbitrary files.
+Senvra can create a **TXT** representation of a Senvra package. This is useful when a text-friendly channel is easier to use than a binary-file upload.
 
-The receiver opens the text with Senvra and restores the original file.
+The receiver can paste or open that text in Senvra and restore the original file.
 
-> Text mode changes how the file is represented; by itself it is not a secrecy mechanism. If privacy matters, enable password protection before creating the output.
+> TXT changes how the data is carried. By itself, it is not a secrecy feature. Use password protection when the contents need to stay private.
+
+### Work directly with ordinary Base64
+
+You can paste standard Base64 into Senvra and use it like another form of the file.
+
+For example, this is accepted:
+
+```text
+Senvra
+iVBORw0KGgoAAAANSUhEUg...
+```
+
+The first line can simply be a label. Raw Base64, `Base64:` labels, and common `data:...;base64,...` values are also supported.
+
+When possible, Senvra recognizes common file types from the decoded bytes, such as PNG, JPEG, GIF, WebP, PDF, ZIP, audio, and video formats. If the original filename or type is not available, Senvra uses a safe generic name and falls back to `.bin` when the type cannot be identified.
+
+Base64 can also be copied from any normal file selected in Senvra. This can be useful for sending text, storing small resources in source code or configuration, or moving a file through a text-only workflow.
+
+> Base64 is not a hash, encryption, or compression. It is a reversible text representation of the original bytes and normally takes more space than the binary file.
 
 ### Protect a file before sending it
 
-Enable password protection, create the Senvra/TXT/ZIP output, and share the password separately with the intended receiver. The recipient can then restore the original file using Senvra.
+Password protection can be enabled before creating Senvra, TXT, or ZIP output. Share the password separately with the intended receiver.
 
-Base64 is intentionally separate from this protected transport workflow: the Base64 action represents the **original file** directly for developer use.
+The receiver opens the protected output in Senvra, enters the password, and restores the original file.
 
 ### Keep processing local
 
-Senvra performs its conversion in the browser. The application itself does not need to upload your selected file to a remote processing service.
+Senvra performs its work inside the browser. The application itself does not need to upload the selected file to a remote processing service.
 
 ---
 
 ## How to use
 
-1. Open `index.html` in a modern browser.
-2. Choose **Convert**.
-3. Select or drop a file.
-4. Choose what you need:
-   - **Download Senvra** for the native portable format.
-   - **Download TXT** when a text representation is easier to send.
-   - **Download ZIP** for broad uploader compatibility.
-   - **Base64** to copy the original file as standard Base64 text for embedding in code.
-5. Optionally enable password protection or generate a **Random Pass** before creating Senvra/TXT/ZIP output.
-6. To restore a Senvra/TXT/ZIP package, switch to **Restore**, load the received file or paste its text, enter the password if one was used, and restore the original file.
+### Start from a normal file
 
-No installation is required.
+1. Open `index.html` in a modern browser.
+2. Choose **Convert file**.
+3. Select or drop any supported-size file.
+4. Optionally enable a password or create a **Random Pass**.
+5. Choose the output you need:
+   - **Download Senvra**
+   - **Download TXT**
+   - **Download ZIP**
+   - **Copy Base64**
+
+### Start from Base64
+
+1. Open **Convert file**.
+2. Paste standard Base64 into the text-input box.
+3. Press **Use text**.
+4. Senvra reconstructs the bytes and treats them like a normal input file.
+5. Create Senvra/TXT/ZIP output or copy Base64 again as needed.
+
+### Restore Senvra or Base64
+
+Open **Restore file** and either:
+
+- load `.senvra`, supported legacy `.poimu`, TXT, ZIP, `.b64`, or `.base64`; or
+- paste Senvra text or raw Base64 directly.
+
+For raw Base64, Senvra restores the decoded file bytes and detects common file types where possible.
+
+For a protected Senvra package, enter the password before restoring.
+
+No installation or build step is required.
 
 ---
 
 ## Privacy & security
 
-Senvra is built around a straightforward idea: **keep the file under the user's control as much as possible.**
+Senvra follows a simple principle: **keep file processing under the user's control as much as possible.**
 
-- File processing is performed locally in the browser.
-- Password protection is optional for the Senvra transport formats.
-- Passwords are not meant to be embedded into the protected file.
-- The application includes integrity checks when restoring supported Senvra files.
-- Base64 is a developer/transport representation and should not be treated as a security feature.
-- Senvra does not claim to hide operating-system history, browser history, clipboard history, downloaded files, screenshots, malware, or access by someone who already controls your device.
+- File conversion is performed locally in the browser.
+- Password protection is optional for Senvra transport formats.
+- The password is kept separate from the protected output.
+- Restored Senvra files are checked for integrity.
+- Base64 and TXT should be treated as representations or transport formats, not as security by themselves.
+- Senvra cannot protect data from someone who already controls your device, browser session, clipboard, downloads, screenshots, backups, or operating-system history.
 
-Public documentation intentionally describes the security model at a high level. See [`SECURITY.md`](SECURITY.md) for reporting guidance.
+Public documentation intentionally keeps security implementation details high-level. The source code remains available for review.
+
+See [`SECURITY.md`](SECURITY.md) for reporting guidance.
 
 ---
 
 ## Compatibility
 
-Senvra 1.x creates the `.senvra` format and can also restore supported legacy `.poimu` files from the earlier project version.
+Senvra 1.2 creates the `.senvra` format and supports:
 
-The interface is available in **English and Persian**.
+- `.senvra`
+- supported legacy `.poimu`
+- Senvra TXT
+- Senvra ZIP
+- standard Base64 text
+- `.b64` and `.base64` text files
+- common Base64 data URIs
+
+The interface is available in **Persian and English**.
 
 ## What Senvra is not
 
-Senvra is not a cloud drive, anonymous communication network, malware-hiding tool, or a way to bypass laws or platform policies. It is a local file conversion, transport, and developer utility. Users remain responsible for the files they process and for the rules of the services they use.
+Senvra is not a cloud drive, anonymous communication network, malware-hiding tool, or a promise that a service will accept a file that violates its rules. It is a local file conversion and transport utility. Users remain responsible for the files they process and for the policies of the services they use.
 
 ## Project structure
 
 ```text
 Senvra/
-├── index.html                  # Complete application — HTML, CSS and JavaScript in one file
-├── examples/
-│   └── base64_embed.py         # Minimal Python Base64 embedding example
-├── README.md                   # Project overview and usage
-├── SECURITY.md                 # Security policy
-├── CHANGELOG.md                # Release history
-├── LICENSE                     # MIT License
-└── .nojekyll                   # Keeps GitHub Pages serving the files as-is
+├── index.html      # Complete application — HTML, CSS and JavaScript in one file
+├── README.md       # Project overview and usage
+├── SECURITY.md     # Security policy
+├── CHANGELOG.md    # Release history
+├── LICENSE         # MIT License
+└── .nojekyll       # Keeps GitHub Pages serving the files as-is
 ```
 
 ## Running locally
 
-Clone or download this repository, then open:
+Clone or download the repository and open:
 
 ```text
 index.html
@@ -157,11 +171,11 @@ index.html
 
 in a modern browser.
 
-There is no build step, package manager, framework, CDN, or external runtime dependency required for the application itself.
+There is no package manager, framework, CDN, build step, or external runtime dependency required for the application itself.
 
 ## Version
 
-**Senvra 1.1**
+**Senvra 1.2**
 
 ## License
 
@@ -171,17 +185,20 @@ Senvra is released under the **MIT License**. See [`LICENSE`](LICENSE).
 
 ## فارسی
 
-**Senvra** ابزاری ساده و محلی برای تبدیل، رمزدار کردن، ارسال، بازیابی و استفاده از فایل‌ها در پروژه‌های برنامه‌نویسی است که مستقیماً داخل مرورگر اجرا می‌شود.
+**Senvra** یک ابزار ساده و محلی برای تبدیل، رمزدار کردن، ارسال و بازگردانی فایل است که مستقیماً داخل مرورگر اجرا می‌شود.
 
-یکی از کاربردهای اصلی آن زمانی است که ارسال نوع خاصی از فایل سخت است. این موضوع به‌خصوص برای کاربران داخل ایران می‌تواند کاربردی باشد، چون سرویس‌ها و آپلودرهای مختلف محدودیت‌های متفاوتی روی پسوند فایل دارند.
+ورودی فقط فایل نیست؛ **Base64 معمولی هم یک ورودی عادی Senvra است.** می‌توانید یک فایل را انتخاب کنید یا Base64 آن را Paste کنید و بعد از همان داده خروجی Senvra، TXT، ZIP یا Base64 بگیرید.
 
-- اگر فایل اصلی آپلود نمی‌شود، می‌توانید خروجی **ZIP** بگیرید؛ ZIP معمولاً توسط آپلودرهای بیشتری پذیرفته می‌شود.
-- می‌توانید فایل را به شکل **TXT** تبدیل کنید و آن را مثل متن ذخیره، کپی یا ارسال کنید؛ دریافت‌کننده با Senvra فایل اصلی را برمی‌گرداند.
-- اگر فایل خصوصی است، قبل از خروجی گرفتن **رمز** بگذارید و رمز را از یک مسیر جداگانه برای دریافت‌کننده بفرستید.
-- با گزینه **Base64** می‌توانید بایت‌های فایل اصلی را به متن Base64 تبدیل و کپی کنید. این قابلیت برای قرار دادن عکس، آیکن یا فایل‌های کوچک مستقیماً داخل کد Python، HTML، JSON یا پروژه‌های تک‌فایلی کاربردی است و وابستگی به فایل جانبی را کم می‌کند.
-- پردازش فایل داخل مرورگر انجام می‌شود و خود Senvra برای تبدیل فایل نیازی به ارسال آن به سرور پردازشی ندارد.
+### کاربردهای مهم
 
-**نکته:** Base64 هش، رمزگذاری یا فشرده‌سازی نیست و برای امنیت طراحی نشده است؛ یک نمایش متنی برگشت‌پذیر از بایت‌های فایل است. همچنین خروجی TXT به‌تنهایی به معنی محرمانه‌بودن نیست. اگر فقط شما و دریافت‌کننده باید بتوانید محتوای فایل را بازیابی کنید، از حالت رمزدار استفاده کنید.
+- اگر یک سایت یا پیام‌رسان پسوند فایل اصلی را قبول نمی‌کند، می‌توانید خروجی **ZIP** بگیرید. ZIP توسط سرویس‌های بسیار بیشتری پشتیبانی می‌شود و مخصوصاً در بعضی روندهای ارسال فایل داخل ایران می‌تواند کاربردی باشد.
+- می‌توانید فایل را به شکل **TXT** منتقل کنید و دریافت‌کننده آن را دوباره با Senvra بازگرداند.
+- می‌توانید **Base64 خام** را مستقیم Paste کنید؛ حتی متنی مثل `Senvra` یا `Base64:` در خط اول قابل قبول است.
+- می‌توانید از یک فایل معمولی **Base64 استاندارد** بگیرید.
+- اگر فایل خصوصی است، قبل از ساخت Senvra/TXT/ZIP روی آن **رمز** بگذارید و رمز را جداگانه برای دریافت‌کننده بفرستید.
+- پردازش فایل برای تبدیل و بازگردانی داخل مرورگر انجام می‌شود و Senvra برای این کار نیازی به آپلود فایل به سرور پردازشی ندارد.
+
+**نکته:** Base64 و TXT به‌تنهایی امنیت ایجاد نمی‌کنند. اگر محتوا باید محرمانه بماند، از قابلیت رمز Senvra استفاده کنید.
 
 ---
 
